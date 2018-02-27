@@ -1,6 +1,11 @@
+load 'app/parsers/ocr_parser.rb'
+load 'app/parsers/metadata_parser.rb'
+
 # This parses and saves input received from the upload form
 module InputParser
   include DocIntegrityCheck
+  include OCRParser
+  include MetadataParser
   
   # Decrypt metadata and add to file list
   def parse_metadata(metadata)
@@ -9,7 +14,7 @@ module InputParser
 
     # Add metadata on each file to a hash
     decrypted.each do |file|
-      @file_list[file["file_hash"]] = file.merge(slices_in: 0, encrypted_text: "")
+      @file_list[file["file_hash"]] = file.merge(slices_in: 0, encrypted_text: "", ocr_status: "Incomplete File")
     end
   end
 
@@ -31,10 +36,15 @@ module InputParser
   def decrypt_and_save_file(file_details)
     # Decrypt the file and save as object (if it matches the hash)
     file_details[:decrypted_file] = decrypt(file_details[:encrypted_text])
-    
+
     # Save decrypted file as file
     file_name = file_details["file_path"].gsub(".gpg", "")
     File.write("raw_documents/#{file_name}", file_details[:decrypted_file])
+
+    # OCR the file and check that it completed
+    file_details[:text] = ocr_by_type(file_details[:decrypted_file], file_name)
+    file_details[:ocr_status] = ocr_status_check(file_details[:text])
+    add_metadata_to_file(file_details)
   end
 
   # Check if the number of expected slices equals the number of received slices AND that the hash is the same
