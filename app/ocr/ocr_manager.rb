@@ -1,9 +1,14 @@
-require "curb"
-load 'app/parsers/metadata_parser.rb'
+load 'app/ocr/metadata_extract_gen.rb'
+load 'app/ocr/ocr_utils.rb'
+load 'app/ocr/tika_ocr.rb'
+load 'app/ocr/embedded_text_ocr.rb'
 
-# Functions to OCR the documents
-module OCRParser
-  include MetadataParser
+# Manages the OCR process by routing to appropriate method for doc type, checking if it worked, etc.
+module OCRManager
+  include MetadataExtractGen
+  include OCRUtils
+  include TikaOCR
+  include EmbeddedTextOCR
   
   # Check if the OCR succeeded
   def ocr_status_check(text)
@@ -48,30 +53,4 @@ module OCRParser
       
     end
   end
-
-  # OCR embedded text PDFs with docsplit
-  def ocr_with_docsplit(path, mime_subtype)
-    Docsplit.extract_text(path, ocr: true, output: "raw_documents/text")
-    return File.read(get_text_path(path, mime_subtype))
-  end
-
-  # OCR the file with tika
-  def ocr_with_tika(path, mime_type, mime_subtype)
-    # Make a Curl request to Tika
-    c = Curl::Easy.new("http://localhost:9998/tika")
-    file_data = File.read(path)
-    c.headers['Content-Type'] = mime_type
-    c.headers['Accept'] = "text/plain"
-    c.http_put(file_data)
-    text = c.body_str
-
-    # Save and return the text
-    File.write(get_text_path(path, mime_subtype), text)
-    return text
-  end
-
-  # Get the path for the OCRed text 
-  def get_text_path(path, mime_subtype)
-    return path.gsub("raw_documents", "raw_documents/text").gsub(".#{mime_subtype}", ".txt")
-  end  
 end

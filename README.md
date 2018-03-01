@@ -28,14 +28,18 @@ https://tika.apache.org/download.html
 
 5. Setup and start https://github.com/TransparencyToolkit/DocUpload
 
-6. In this directory (for the OCRServer), run: rackup config.ru
+6. Set the gpg_recipient ID to the key ID for the UDP server running on the
+same machine as DocManager
+
+7. In this directory (for the OCRServer), run: rackup config.ru
 
 During testing on one machine, you may need to ensure it runs on a port other
 than 9292 (as that is the default port the upload form sets on). To do this,
 simply add -p #### to the end of the call. In deployment this will not matter
 because the upload form and OCR server will be on separate machines.
 
-7. Upload documents with the separate upload form app. They should be saved in
+8. Upload documents with the separate upload form app. They should be saved in
 the raw_documents folder. The OCRed text of the documents will be stored in
-raw_documents/text.
+raw_documents/text and sent to the UDP server, which sends them to DocManager
+for indexing.
 

@@ -1,11 +1,8 @@
-load 'app/parsers/ocr_parser.rb'
-load 'app/parsers/metadata_parser.rb'
-
 # This parses and saves input received from the upload form
 module InputParser
   include DocIntegrityCheck
-  include OCRParser
-  include MetadataParser
+  include OCRManager
+  include MetadataExtractGen
   
   # Decrypt metadata and add to file list
   def parse_metadata(metadata)
@@ -45,6 +42,19 @@ module InputParser
     file_details[:text] = ocr_by_type(file_details[:decrypted_file], file_name)
     file_details[:ocr_status] = ocr_status_check(file_details[:text])
     add_metadata_to_file(file_details)
+
+    # Add index name and item type
+    file_details[:index_name] = file_details["project"]
+    file_details[:item_type] = file_details["doc_type"]
+
+    # Send file out
+    SendController.send(filter_fields(file_details))
+  end
+
+  # Filter for just the approved list of fields in the dataspec
+  def filter_fields(file_details)
+    approved_fields = [:text, :title, :description, :date_added, :filetype, :ocr_status, :index_name, :item_type, :rel_path]
+    return file_details.select{|k, v| approved_fields.include?(k)}
   end
 
   # Check if the number of expected slices equals the number of received slices AND that the hash is the same
