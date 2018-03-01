@@ -1,14 +1,14 @@
 load 'app/ocr/metadata_extract_gen.rb'
 load 'app/ocr/ocr_utils.rb'
 load 'app/ocr/tika_ocr.rb'
-load 'app/ocr/embedded_text_ocr.rb'
+load 'app/ocr/image_style_pdf_ocr.rb'
 
 # Manages the OCR process by routing to appropriate method for doc type, checking if it worked, etc.
 module OCRManager
   include MetadataExtractGen
   include OCRUtils
   include TikaOCR
-  include EmbeddedTextOCR
+  include ImageStylePdfOCR
   
   # Check if the OCR succeeded
   def ocr_status_check(text)

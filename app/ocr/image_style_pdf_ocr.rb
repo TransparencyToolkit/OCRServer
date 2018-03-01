@@ -1,5 +1,5 @@
-# Method for embedded text OCR of files with DocSplit and Tesseract
-module EmbeddedTextOCR
+# Method for image style PDF  OCR of files with DocSplit and Tesseract
+module ImageStylePdfOCR
   include OCRUtils
   
   # OCR embedded text PDFs with docsplit
