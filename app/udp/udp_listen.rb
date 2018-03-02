@@ -10,7 +10,7 @@ module UdpListen
     # Process incoming messages to socket
     Socket.udp_server_loop_on([@socket]) do |message, sender|
       parsed = JSON.parse(message)
-
+      
       # Handle metadata- setup doc list
       if parsed["metadata"]
         parse_metadata(parsed["metadata"])

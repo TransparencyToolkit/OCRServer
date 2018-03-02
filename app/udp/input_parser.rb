@@ -23,6 +23,8 @@ module InputParser
     file_details[:slices_in] += 1
     file_details[:encrypted_text] += chunk["slice"]
 
+    puts "Received #{file_details[:slices_in]}"
+    
     # If file is fully received, decrypt it
     if file_fully_received?(file_details)
       decrypt_and_save_file(file_details)

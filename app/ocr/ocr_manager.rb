@@ -41,11 +41,11 @@ module OCRManager
     case mime_subtype
     when "pdf"
       # First try to OCR using Tika (for embedded text)
-      text = ocr_with_tika(full_path, mime_type, mime_subtype)
+      text = fix_encoding(ocr_with_tika(full_path, mime_type, mime_subtype))
 
       # Tika OCR failed. Try Tesseract with Docsplit
       if text.strip.empty?
-        text = ocr_with_docsplit(full_path, mime_subtype)
+        text = fix_encoding(ocr_with_docsplit(full_path, mime_subtype))
       end
 
       return text
