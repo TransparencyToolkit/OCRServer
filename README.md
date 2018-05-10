@@ -6,7 +6,7 @@ results to Catalyst.
 * graphicsmagick
 * poppler-data
 * ghostscript
-* tesseract
+* tesseract-ocr
 * pdftk
 * libreoffice
 * openjdk-8-jdk
@@ -24,7 +24,7 @@ results to Catalyst.
 3. Install Apache Tika server by downloading the .jar from
 https://tika.apache.org/download.html
 
-4. Start Tika by running: java -jar tika-server-1.17.jar
+4. Start Tika by running: java -jar tika-server-1.18.jar
 
 5. Setup and start https://github.com/TransparencyToolkit/DocUpload
 

@@ -1,3 +1,5 @@
+require 'socket'
+
 module UdpListen
   def listen_for_data
     # Open UDP socket to receive data
