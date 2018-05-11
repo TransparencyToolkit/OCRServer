@@ -47,6 +47,7 @@ module UdpSend
     encrypted_metadata = encrypt_data(JSON.pretty_generate([metadata]), ENV['gpg_recipient'])
 
     # Send the metadata
+    sleep(0.7)
     send_data({metadata: encrypted_metadata.to_s})
   end
 
@@ -58,7 +59,7 @@ module UdpSend
     # Send each slice of the doc (chunks of 60000 bytes so that UDP can handle it)
     sliced = slice_string(encrypted_json.to_s)
     sliced.each_with_index do |slice, i|
-      sleep(0.1) # Delay a bit
+      sleep(0.7) # Delay a bit
       puts "Sending #{i}"
       send_data({chunk_num: i, hash: hashed_json, slice: slice})
     end

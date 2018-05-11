@@ -6,7 +6,7 @@ require "docsplit"
 require "curb"
 
 # Set key to encrypt to
-ENV['gpg_recipient'] = "3E491C10"
+ENV['gpg_recipient'] = "360F8060"
 
 # Load all files
 Dir.glob('./app/{ocr,udp,controllers}/*.rb').each { |file| require file }

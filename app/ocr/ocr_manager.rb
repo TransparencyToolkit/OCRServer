@@ -35,9 +35,9 @@ module OCRManager
 
   # Choose the type of file to index
   def ocr_by_type(file, path)
-    mime_subtype, mime_type = check_mime_type(file)
+    mime_subtype, mime_type = check_mime_type(file, path)
     full_path = "raw_documents/#{path}"
-
+    
     case mime_subtype
     when "pdf"
       # First try to OCR using Tika (for embedded text)
@@ -49,6 +49,8 @@ module OCRManager
       end
 
       return text
+    when "bmp", "png", "gif", "tiff", "tif", "jpeg", "svg+xml"
+      return fix_encoding(ocr_with_docsplit(full_path, mime_subtype)) 
     else
       
     end

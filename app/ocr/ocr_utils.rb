@@ -7,6 +7,14 @@ module OCRUtils
   
   # Get the path for the OCRed text
   def get_text_path(path, mime_subtype)
-    return path.gsub("raw_documents", "raw_documents/text").gsub(".#{mime_subtype}", ".txt")
+    split_path = path.split(".")
+
+    # Set path to documents with extension
+    if split_path.length > 1
+      extension = "."+split_path.last
+      return path.gsub("raw_documents", "raw_documents/text").gsub(extension, ".txt")
+    else # Set path to documents without extension
+      return path.gsub("raw_documents", "raw_documents/text")+".txt"
+    end
   end
 end
