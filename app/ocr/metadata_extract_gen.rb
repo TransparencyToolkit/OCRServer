@@ -5,27 +5,12 @@ module MetadataExtractGen
     # Add ID field (file hash and name)
     file_details[:rel_path] = file_details["file_path"].gsub(".gpg", "")
     
-    # Add data on the file type
-    file_details[:filetype] = check_mime_type(file_details[:decrypted_file], file_details[:rel_path])[0]
-      
     # Add title and description
     file_details[:title] = add_title(file_details, file_details[:filetype])
     file_details[:description] = file_details["doc_desc"]
 
     # Add field with date added
     file_details[:date_added] = Time.now
-  end
-
-  # Check the mime type of the file
-  def check_mime_type(file, path)
-    begin
-      subtype = MimeMagic.by_magic(file).subtype
-      type = MimeMagic.by_magic(file).type
-    rescue # If mime magic can't detect, use extension
-      subtype = path.split(".").last
-      type = path.split(".").last
-    end
-    return subtype, type
   end
 
   # Generate a title for the document

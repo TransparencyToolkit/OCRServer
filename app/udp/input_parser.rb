@@ -3,6 +3,7 @@ module InputParser
   include DocIntegrityCheck
   include OCRManager
   include MetadataExtractGen
+  include DetectFiletype
   
   # Decrypt metadata and add to file list
   def parse_metadata(metadata)
@@ -38,10 +39,12 @@ module InputParser
 
     # Save decrypted file as file
     file_name = file_details["file_path"].gsub(".gpg", "")
-    File.write("raw_documents/#{file_name}", file_details[:decrypted_file])
+    full_path = "raw_documents/#{file_name}"
+    File.write(full_path, file_details[:decrypted_file])
 
     # OCR the file and check that it completed
-    file_details[:text] = ocr_by_type(file_details[:decrypted_file], file_name)
+    file_details[:filetype], mime_type = check_mime_type(file_details[:decrypted_file], file_name, full_path)
+    file_details[:text] = ocr_by_type(file_details[:decrypted_file], file_name, full_path, file_details[:filetype], mime_type)
     file_details[:ocr_status] = ocr_status_check(file_details[:text])
     add_metadata_to_file(file_details)
 
