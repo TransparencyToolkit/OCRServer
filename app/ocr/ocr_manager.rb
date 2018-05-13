@@ -36,18 +36,26 @@ module OCRManager
   # Choose the type of file to index
   def ocr_by_type(file, path, full_path, mime_subtype, mime_type)
     case mime_subtype
-    when "pdf", "html", "xml"
+    when "pdf"
       # First try to OCR using Tika (for embedded text PDF or html)
       text = fix_encoding(ocr_with_tika(full_path, mime_type, mime_subtype))
 
       # Tika OCR failed. Try Tesseract with Docsplit
-      if text.strip.empty? && mime_subtype == "pdf"
+      if text.strip.empty? 
         text = fix_encoding(ocr_with_docsplit(full_path, mime_subtype))
       end
 
       return text
+
+    # Office docs and HTML
+    when "rtf", "msword", "docx", "odt", "ppt", "pptx", "odp", "xls", "xlsx", "ods", "html", "xml"
+      text = fix_encoding(ocr_with_tika(full_path, mime_type, mime_subtype))
+      
+    # Text formats
     when "txt", "sql", "json", "csv"
       return fix_encoding(file)
+
+    # Image formats
     when "bmp", "png", "gif", "tiff", "tif", "jpeg", "svg+xml"
       return fix_encoding(ocr_with_docsplit(full_path, mime_subtype)) 
     else

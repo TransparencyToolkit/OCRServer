@@ -1,12 +1,49 @@
 module DetectFiletype
   # Check the mime type of the file
   def check_mime_type(file, path, full_path)
-    begin
+    begin # First try MimeMagic to detect type
       subtype = MimeMagic.by_magic(file).subtype
       type = MimeMagic.by_magic(file).type
     rescue # If mime magic can't detect, use other methods
       subtype, type = file_magic_type(file, path, full_path)
     end
+    
+    # Catches .docx and similar that may be wrongly categorized
+    subtype, type = officex_remap(file, path, full_path) if subtype == "zip" || subtype.include?("x-ole-storage")
+
+    # Remap mime subtypes for office files with long names
+    subtype, type = vnd_remap(subtype, type) if subtype.include?("vnd")
+    
+    return subtype, type
+  end
+
+  # Remap files that may be mistaken for zip files
+  def officex_remap(file, path, full_path)
+    # Get the type from the extension
+    subtype, type = file_magic_type(file, path, full_path)
+
+    # Remap to appropriate types
+    remap_hash = {
+      "docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "ppt" => "application/vnd.ms-powerpoint",
+      "xls" => "application/vnd.ms-excel"
+    }
+    type = remap_hash[subtype]
+    
+    return subtype, type
+  end
+
+  # Remap vnd formats to be more readable subtypes
+  def vnd_remap(subtype, type)
+    remap_hash = {
+      "vnd.oasis.opendocument.text" => "odt",
+      "vnd.oasis.opendocument.presentation" => "odp",
+      "vnd.oasis.opendocument.spreadsheet" => "ods"
+    }
+    subtype = remap_hash[subtype]
+    
     return subtype, type
   end
 
@@ -35,7 +72,7 @@ module DetectFiletype
     end
   end
   
-  # Get the file type
+  # Get the file type  from file extension (as last resort)
   def get_file_type_from_extension(path)
     subtype = path.split(".").last
     type = path.split(".").last
