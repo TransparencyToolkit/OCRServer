@@ -41,7 +41,7 @@ module InputParser
     file_name = file_details["file_path"].gsub(".gpg", "")
     full_path = "raw_documents/#{file_name}"
     File.write(full_path, file_details[:decrypted_file])
-
+    
     # OCR the file and check that it completed
     file_details[:filetype], mime_type = check_mime_type(file_details[:decrypted_file], file_name, full_path)
     file_details[:text] = ocr_by_type(file_details[:decrypted_file], file_name, full_path, file_details[:filetype], mime_type)

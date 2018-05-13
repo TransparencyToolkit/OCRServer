@@ -28,7 +28,7 @@ module DetectFiletype
 
   # Process an unknown binary file
   def process_unknown_binary_file(path)
-    if full_path.include?(".")
+    if path.include?(".")
       return get_file_type_from_extension(path)
     else
       return "binary", "binary"
