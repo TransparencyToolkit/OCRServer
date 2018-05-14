@@ -14,6 +14,7 @@ results to Catalyst.
 * libcurl3
 * libcurl3-gnutls
 * libcurl4-openssl-dev
+* libmagic-dev
 
 2. Install the following gems:
 * doc_integrity_check
