@@ -13,6 +13,17 @@ module MetadataExtractGen
     file_details[:date_added] = Time.now
   end
 
+  # Extract the metadata
+  def extract_metadata(file_details, path)
+    metadata = Hash.new
+    metadata[:date] = Docsplit.extract_date(path)
+    metadata[:author] = Docsplit.extract_author(path)
+    metadata[:creator] = Docsplit.extract_creator(path)
+    metadata[:producer] = Docsplit.extract_producer(path)
+    metadata[:keywords] = Donsplit.extract_keywords(path)
+    return metadata
+  end
+
   # Generate a title for the document
   def add_title(file_details, mime_type)
     # If title isn't empty, use that

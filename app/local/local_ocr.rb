@@ -43,6 +43,8 @@ class LocalOcr
     file_details[:full_path] = file_path.gsub(@in_dir, "")
     file_details[:folders] = file_details[:rel_path].split("/").reject!(&:empty?)-[name]
     file_details[:title] = file_details[:rel_path].split("/").join(" ").strip.lstrip.gsub("_", " ").gsub(".#{file_details[:filetype]}", "")
+    file_details = file_details.merge(extract_metadata(file_details, file_path))
+    
     return JSON.pretty_generate(file_details)
   end
 end
