@@ -20,7 +20,7 @@ module MetadataExtractGen
     metadata[:author] = Docsplit.extract_author(path)
     metadata[:creator] = Docsplit.extract_creator(path)
     metadata[:producer] = Docsplit.extract_producer(path)
-    metadata[:keywords] = Donsplit.extract_keywords(path)
+    metadata[:keywords] = Docsplit.extract_keywords(path)
     return metadata
   end
 
