@@ -28,7 +28,8 @@ module DetectFiletype
       "pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation",
       "xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "ppt" => "application/vnd.ms-powerpoint",
-      "xls" => "application/vnd.ms-excel"
+      "xls" => "application/vnd.ms-excel",
+      "key" => "application/vnd.apple.keynote"
     }
     type = remap_hash[subtype]
     

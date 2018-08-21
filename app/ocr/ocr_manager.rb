@@ -48,7 +48,7 @@ module OCRManager
       return text
 
     # Office docs and HTML
-    when "rtf", "msword", "docx", "odt", "ppt", "pptx", "odp", "xls", "xlsx", "ods", "html", "xml"
+    when "rtf", "msword", "docx", "odt", "ppt", "pptx", "odp", "xls", "xlsx", "ods", "html", "xml", "key"
       text = fix_encoding(ocr_with_tika(full_path, mime_type, mime_subtype))
       
     # Text formats

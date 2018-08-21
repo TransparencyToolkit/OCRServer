@@ -41,7 +41,7 @@ class LocalOcr
     # Set paths
     file_details[:rel_path] = file_path.gsub(@in_dir, "")
     file_details[:full_path] = file_path.gsub(@in_dir, "")
-    file_details[:directories] = file_details[:rel_path].split("/").reject!(&:empty?)
+    file_details[:directories] = file_details[:rel_path].split("/").reject!(&:empty?)-[name]
     file_details[:title] = file_details[:rel_path].split("/").join(" ").strip.lstrip.gsub("_", " ").gsub(".#{file_details[:filetype]}", "")
     return JSON.pretty_generate(file_details)
   end
