@@ -1,16 +1,13 @@
 # Adds metadata about the file to the JSON, automatically generates titles, etc
 module MetadataExtractGen
   # Add metadata to thee file
-  def add_metadata_to_file(file_details)
-    # Add ID field (file hash and name)
-    file_details[:rel_path] = file_details["file_path"].gsub(".gpg", "")
-    
+  def add_metadata_to_file(metadata, ocr_hash)
     # Add title and description
-    file_details[:title] = add_title(file_details, file_details[:filetype])
-    file_details[:description] = file_details["doc_desc"]
+    ocr_hash[:title] = add_title(metadata, ocr_hash)
+    ocr_hash[:description] = metadata["doc_desc"]
 
     # Add field with date added
-    file_details[:date_added] = Time.now
+    ocr_hash[:date_added] = Time.now
   end
 
   # Extract the metadata
@@ -25,13 +22,13 @@ module MetadataExtractGen
   end
 
   # Generate a title for the document
-  def add_title(file_details, mime_type)
+  def add_title(metadata, ocr_hash)
     # If title isn't empty, use that
-    if file_details["doc_title"] && !file_details["doc_title"].empty?
-      return file_details["doc_title"]
+    if metadata["doc_title"] && !metadata["doc_title"].empty?
+      return metadata["doc_title"]
       
     else # Trim file name and automatically generate a title
-      trimmed_name = file_details["file_path"].split("_", 2)[1].split(".#{mime_type}")[0]
+      trimmed_name = ocr_hash[:rel_path].split("_", 2)[1].split(".#{ocr_hash[:filetype]}")[0]
       return trimmed_name.gsub("_", " ").gsub("/", "").gsub("-", " ").split.map(&:capitalize).join(" ")
     end
   end

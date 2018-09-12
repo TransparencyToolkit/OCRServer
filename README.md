@@ -1,6 +1,6 @@
 This is the software for the Transparency Toolkit OCR server. It receives data
-from the document upload form via UDP, OCRs the documents, and sends the
-results to Catalyst.
+from the document upload form, OCRs the documents, and sends the results to
+DocManager via an index server.
 
 1. Install the following packages:
 * graphicsmagick
@@ -21,7 +21,9 @@ results to Catalyst.
 * mimemagic
 * docsplit
 * curb
-* ruby-filemagic
+* filemagic
+* sinatra
+* pry
 
 3. Install Apache Tika server by downloading the .jar from
 https://tika.apache.org/download.html
@@ -30,17 +32,16 @@ https://tika.apache.org/download.html
 
 5. Setup and start https://github.com/TransparencyToolkit/DocUpload
 
-6. Set the gpg_recipient ID to the key ID for the UDP server running on the
-same machine as DocManager
+6. In config.ru, set the gpg_recipient ID to the key ID for the index server
+running on the same machine as DocManager. Set the gpg_signer as the key ID on
+this machine.
 
-7. In this directory (for the OCRServer), run: rackup config.ru
+7. In config.ru, set the indexserver_url to the URL of the index server
+running on the same machine as DocManager.
 
-During testing on one machine, you may need to ensure it runs on a port other
-than 9292 (as that is the default port the upload form sets on). To do this,
-simply add -p #### to the end of the call. In deployment this will not matter
-because the upload form and OCR server will be on separate machines.
+8. In this directory (for the OCRServer), run: rackup config.ru -p 9393
 
-8. Upload documents with the separate upload form app. They should be saved in
+9. Upload documents with the separate upload form app. They should be saved in
 the raw_documents folder. The OCRed text of the documents will be stored in
 raw_documents/text and sent to the UDP server, which sends them to DocManager
 for indexing.
