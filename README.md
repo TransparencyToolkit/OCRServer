@@ -30,18 +30,25 @@ https://tika.apache.org/download.html
 
 4. Start Tika by running: java -jar tika-server-1.18.jar
 
-5. Setup and start https://github.com/TransparencyToolkit/DocUpload
+5. Optionally: Install ABBYY. This is not free software, but has higher
+quality OCR for some file types. Images and image-style PDFs as well as
+office documents that fail OCR with Tika will default to using ABBYY if it is
+installed. A license for the command line version can be purchased at
+https://www.ocr4linux.com/en:pricing:start. The OCR server will default to
+Tesseract if ABBYY is not installed.
 
-6. In config.ru, set the gpg_recipient ID to the key ID for the index server
+6. Setup and start https://github.com/TransparencyToolkit/DocUpload
+
+7. In config.ru, set the gpg_recipient ID to the key ID for the index server
 running on the same machine as DocManager. Set the gpg_signer as the key ID on
 this machine.
 
-7. In config.ru, set the indexserver_url to the URL of the index server
+8. In config.ru, set the indexserver_url to the URL of the index server
 running on the same machine as DocManager.
 
-8. In this directory (for the OCRServer), run: rackup config.ru -p 9393
+9. In this directory (for the OCRServer), run: rackup config.ru -p 9393
 
-9. Upload documents with the separate upload form app. They should be saved in
+10. Upload documents with the separate upload form app. They should be saved in
 the raw_documents folder. The OCRed text of the documents will be stored in
 raw_documents/text and sent to the UDP server, which sends them to DocManager
 for indexing.
