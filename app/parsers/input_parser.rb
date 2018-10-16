@@ -30,9 +30,19 @@ module InputParser
   # Add metadataand index info
   def prepare_data_to_index(ocr_hash, metadata)
     ocr_hash[:index_name] = metadata["project"]
-    ocr_hash[:item_type] = metadata["doc_type"]
+    ocr_hash[:item_type] = determine_doc_type(ocr_hash)
     add_metadata_to_file(metadata, ocr_hash)
     filtered = filter_fields(ocr_hash)
+  end
+
+  # Determine the document type class that should be used when indexing the document
+  def determine_doc_type(ocr_hash)
+    case ocr_hash[:filetype]
+    when "eml", "pst", "mbox"
+      return "Email"
+    else # This is the best option for most file formats
+      return "ArchiveDoc"
+    end
   end
   
   # OCR the file
