@@ -49,11 +49,11 @@ module OCRManager
       
     # Text formats
     when "txt", "sql", "json", "csv"
-      return fix_encoding(file)
+      return file
 
     # Image formats
     when "bmp", "png", "gif", "tiff", "tif", "jpeg", "svg+xml"
-      return fix_encoding(ocr_image(full_path, mime_subtype, mime_type))
+      return ocr_image(full_path, mime_subtype, mime_type)
     else
       # It isn't a file type that supports OCR with our software
     end
