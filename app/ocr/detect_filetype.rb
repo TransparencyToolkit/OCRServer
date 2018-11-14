@@ -4,15 +4,21 @@ module DetectFiletype
     begin # First try MimeMagic to detect type
       subtype = MimeMagic.by_magic(file).subtype
       type = MimeMagic.by_magic(file).type
+
+      # Fix not actually pdf
+      subtype, type = nil if path.include?("pd_") && !path.include?("pdf")
     rescue # If mime magic can't detect, use other methods
       subtype, type = file_magic_type(file, path, full_path)
     end
-    
-    # Catches .docx and similar that may be wrongly categorized
-    subtype, type = officex_remap(file, path, full_path) if subtype == "zip" || subtype.include?("x-ole-storage")
 
-    # Remap mime subtypes for office files with long names
-    subtype, type = vnd_remap(subtype, type) if subtype.include?("vnd")
+    # Remap depending on subtype
+    if subtype
+      # Catches .docx and similar that may be wrongly categorized
+      subtype, type = officex_remap(file, path, full_path) if subtype == "zip" || subtype.include?("x-ole-storage")
+
+      # Remap mime subtypes for office files with long names
+      subtype, type = vnd_remap(subtype, type) if subtype.include?("vnd")
+    end
     
     return subtype, type
   end

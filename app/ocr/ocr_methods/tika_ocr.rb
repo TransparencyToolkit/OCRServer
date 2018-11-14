@@ -15,7 +15,6 @@ module TikaOCR
     text = c.body_str
 
     # Save and return the text
-#    File.write(get_text_path(path, mime_subtype), text)
     return text
   end
 end

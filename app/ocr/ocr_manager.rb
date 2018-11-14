@@ -53,7 +53,7 @@ module OCRManager
 
     # Image formats
     when "bmp", "png", "gif", "tiff", "tif", "jpeg", "svg+xml"
-      return fix_encoding(ocr_image(full_path, mime_subtype))
+      return fix_encoding(ocr_image(full_path, mime_subtype, mime_type))
     else
       # It isn't a file type that supports OCR with our software
     end

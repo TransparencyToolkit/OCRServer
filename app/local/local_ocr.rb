@@ -11,11 +11,22 @@ class LocalOcr
     @out_dir = out_dir
   end
 
+  # Set the save name
+  def set_save_name(file)
+    save_name = file.gsub(@in_dir, "").gsub("/", "_")+".json"
+    if save_name.length > 255
+      extension = file.gsub(@in_dir, "").gsub("/", "_").split(".").last
+      return file.gsub(@in_dir, "").gsub("/", "_").gsub(".#{extension}", "")[0..230]+".#{extension}.json"
+    end
+    return save_name
+  end
+
   # Go through files in path and OCR
   def loop_through_files
     Dir.glob("#{@in_dir}/**/*") do |file|
+      next if file.include?("(") || file.include?(")")
       if File.file?(file)
-        save_name = file.gsub(@in_dir, "").gsub("/", "_")+".json"
+        save_name = set_save_name(file)
 
         # Only OCR if not already
         if !File.exist?(@out_dir+save_name)
@@ -43,7 +54,8 @@ class LocalOcr
     file_details[:full_path] = file_path.gsub(@in_dir, "")
     file_details[:folders] = file_details[:rel_path].split("/").reject!(&:empty?)-[name]
     file_details[:title] = file_details[:rel_path].split("/").join(" ").strip.lstrip.gsub("_", " ").gsub(".#{file_details[:filetype]}", "")
-    file_details = file_details.merge(extract_metadata(file_details, file_path))
+    
+#    file_details = file_details.merge(extract_metadata(file_details, file_path))
     
     return JSON.pretty_generate(file_details)
   end

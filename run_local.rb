@@ -9,8 +9,8 @@ require "filemagic"
 
 Dir.glob('./app/{ocr,local}/*.rb').each { |file| require file }
 
-in_path = "INPUTDIR"
-out_path = "OUTPUTDIR"
+in_path = ""
+out_path = ""
 
 l = LocalOcr.new(in_path, out_path)
 l.loop_through_files

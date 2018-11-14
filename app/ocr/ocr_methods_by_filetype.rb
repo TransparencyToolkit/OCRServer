@@ -7,7 +7,7 @@ module OCRMethodsByFiletype
 
     # Tika OCR failed. Likely image style PDF. Try Tesseract with Docsplit or ABBYY
     if ocr_status_check(text) != "Success"
-      text = fix_encoding(ocr_image(full_path, mime_subtype))
+      text = fix_encoding(ocr_image(full_path, mime_subtype, mime_type))
     end
 
     return text
@@ -28,11 +28,16 @@ module OCRMethodsByFiletype
   end
 
   # OCR images, using ABBYY when available or docsplit when not
-  def ocr_image(file, mime_subtype)
+  def ocr_image(file, mime_subtype, mime_type)
     begin
       return ocr_with_abbyy(file)
     rescue
-      return ocr_with_docsplit(file, mime_subtype)
+      # If a PDF, use docsplit as tesseract works best with image-style pdfs
+      if mime_subtype.downcase.include?("pdf")
+        return ocr_with_docsplit(file, mime_subtype)
+      else # If not a pdf, try with tika
+        return ocr_with_tika(file, mime_type, mime_subtype)
+      end
     end
   end
 end
