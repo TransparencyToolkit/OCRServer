@@ -43,20 +43,25 @@ class LocalOcr
     name = file_path.split("/").last
     file_details = Hash.new
     content = File.read(file_path)
-    
-    # OCR the file and check that it completed
-    file_details[:filetype], mime_type = check_mime_type(content, name, file_path)
-    file_details[:text] = ocr_by_type(content, name, file_path, file_details[:filetype], mime_type)
-    file_details[:ocr_status] = ocr_status_check(file_details[:text])
 
-    # Set paths
-    file_details[:rel_path] = file_path.gsub(@in_dir, "")
-    file_details[:full_path] = file_path.gsub(@in_dir, "")
-    file_details[:folders] = file_details[:rel_path].split("/").reject!(&:empty?)-[name]
-    file_details[:title] = file_details[:rel_path].split("/").join(" ").strip.lstrip.gsub("_", " ").gsub(".#{file_details[:filetype]}", "")
+    begin
+      # OCR the file and check that it completed
+      file_details[:filetype], mime_type = check_mime_type(content, name, file_path)
+      file_details[:text] = ocr_by_type(content, name, file_path, file_details[:filetype], mime_type)
+      file_details[:ocr_status] = ocr_status_check(file_details[:text])
+      
+      # Set paths
+      file_details[:rel_path] = file_path.gsub(@in_dir, "")
+      file_details[:full_path] = file_path.gsub(@in_dir, "")
+      file_details[:folders] = file_details[:rel_path].split("/").reject!(&:empty?)-[name]
+      file_details[:title] = file_details[:rel_path].split("/").join(" ").strip.lstrip.gsub("_", " ").gsub(".#{file_details[:filetype]}", "")
     
-#    file_details = file_details.merge(extract_metadata(file_details, file_path))
+      #    file_details = file_details.merge(extract_metadata(file_details, file_path))
     
-    return JSON.pretty_generate(file_details)
+      return JSON.pretty_generate(file_details)
+    rescue # Fix encoding if JSON generate fails (but not otherwise to avoid causing issues with text)
+      file_details[:text] = fix_encoding(text)
+      return JSON.pretty_generate(file_details)
+    end
   end
 end
