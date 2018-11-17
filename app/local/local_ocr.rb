@@ -24,7 +24,6 @@ class LocalOcr
   # Go through files in path and OCR
   def loop_through_files
     Dir.glob("#{@in_dir}/**/*") do |file|
-      next if file.include?("(") || file.include?(")")
       if File.file?(file)
         save_name = set_save_name(file)
 
@@ -60,7 +59,8 @@ class LocalOcr
     
       return JSON.pretty_generate(file_details)
     rescue # Fix encoding if JSON generate fails (but not otherwise to avoid causing issues with text)
-      file_details[:text] = fix_encoding(text)
+      puts "Encoding issue, attempting to fix..."
+      file_details[:text] = file_details[:text].force_encoding('UTF-8')
       return JSON.pretty_generate(file_details)
     end
   end
