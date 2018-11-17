@@ -30,7 +30,7 @@ module OCRMethodsByFiletype
   # OCR images, using ABBYY when available or docsplit when not
   def ocr_image(file, mime_subtype, mime_type)
     begin
-      return file
+      return ocr_with_abbyy(file)
     rescue
       # If a PDF, use docsplit as tesseract works best with image-style pdfs
       if mime_subtype.downcase.include?("pdf")
