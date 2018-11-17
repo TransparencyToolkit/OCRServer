@@ -56,12 +56,18 @@ class LocalOcr
       file_details[:title] = file_details[:rel_path].split("/").join(" ").strip.lstrip.gsub("_", " ").gsub(".#{file_details[:filetype]}", "")
     
       #    file_details = file_details.merge(extract_metadata(file_details, file_path))
-    
+      puts file_details[:text]
       return JSON.pretty_generate(file_details)
     rescue # Fix encoding if JSON generate fails (but not otherwise to avoid causing issues with text)
       puts "Encoding issue, attempting to fix..."
-      file_details[:text] = file_details[:text].force_encoding('UTF-8')
-      return JSON.pretty_generate(file_details)
+      begin
+        file_details[:text] = file_details[:text].force_encoding('UTF-8')
+        return JSON.pretty_generate(file_details)
+      rescue
+        puts "That failed. Trying to fix in another way."
+        file_details[:text] = fix_encoding(file_details[:text])
+        return JSON.pretty_generate(file_details)
+      end
     end
   end
 end
