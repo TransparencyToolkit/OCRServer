@@ -46,7 +46,7 @@ class LocalOcr
     begin
       # OCR the file and check that it completed
       file_details[:filetype], mime_type = check_mime_type(content, name, file_path)
-      file_details[:text] = ocr_by_type(content, name, file_path, file_details[:filetype], mime_type)
+      file_details[:text] = ocr_by_type(content, name, file_path, file_details[:filetype], mime_type).to_s
       file_details[:ocr_status] = ocr_status_check(file_details[:text])
       
       # Set paths
