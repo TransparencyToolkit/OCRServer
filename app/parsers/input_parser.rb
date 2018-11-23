@@ -15,7 +15,7 @@ module InputParser
     # Save and OCR file
     file_name = metadata["file_path"].gsub(".gpg", "")
     full_path = save_decrypted_file(file, file_name)
-    ocr_hash = ocr_file(metadata, file, file_name, full_path)
+    ocr_hash = ocr_file(file, file_name, full_path).merge({rel_path: file_name})
     filtered = prepare_data_to_index(ocr_hash, metadata)
     send_file(filtered)
   end
@@ -45,18 +45,6 @@ module InputParser
     end
   end
   
-  # OCR the file
-  def ocr_file(metadata, file, file_name, full_path)
-    ocr_hash = Hash.new
-
-    # OCR the file
-    ocr_hash[:filetype], mime_type = check_mime_type(file, file_name, full_path)
-    ocr_hash[:text] = ocr_by_type(file, file_name, full_path, ocr_hash[:filetype], mime_type)
-    ocr_hash[:ocr_status] = ocr_status_check(ocr_hash[:text])
-    ocr_hash[:rel_path] = file_name
-    return ocr_hash
-  end
-
   # Filter for just the approved list of fields in the dataspec
   def filter_fields(file_details)
     approved_fields = [:text, :title, :description, :date_added, :filetype, :ocr_status, :index_name, :item_type, :rel_path]

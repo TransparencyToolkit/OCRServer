@@ -40,4 +40,9 @@ module OCRMethodsByFiletype
       end
     end
   end
+
+  # OCR emails
+  def ocr_mail(full_path, mime_subtype, mime_type)
+    return ocr_rfc822(full_path)
+  end
 end

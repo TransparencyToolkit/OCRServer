@@ -24,6 +24,7 @@ DocManager via an index server.
 * filemagic
 * sinatra
 * pry
+* mail
 
 3. Install Apache Tika server by downloading the .jar from
 https://tika.apache.org/download.html

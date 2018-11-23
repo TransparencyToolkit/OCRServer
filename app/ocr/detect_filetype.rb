@@ -18,6 +18,9 @@ module DetectFiletype
 
       # Remap mime subtypes for office files with long names
       subtype, type = vnd_remap(subtype, type) if subtype.include?("vnd")
+
+      # Remap email types
+      subtype, type = "email", "message" if subtype.include?("rfc822")
     end
     
     return subtype, type
@@ -67,7 +70,11 @@ module DetectFiletype
 
   # Process text files of unknown type (html or text)
   def process_unknown_text_file(file, path)
-    return "txt", "txt"
+    if path.include?(".eml")
+      return "rfc822", "message"
+    else
+      return "txt", "txt"
+    end
   end
 
   # Process an unknown binary file

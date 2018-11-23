@@ -29,7 +29,7 @@ class LocalOcr
 
         # Only OCR if not already
         if !File.exist?(@out_dir+save_name)
-          json = ocr_file(file, save_name)
+          json = ocr(file, save_name)
           File.write(@out_dir+save_name, json)
           puts "OCRed #{save_name}"
         end
@@ -38,34 +38,36 @@ class LocalOcr
   end
 
   # OCR a file
-  def ocr_file(file_path, save_name)
+  def ocr(file_path, save_name)
     name = file_path.split("/").last
     file_details = Hash.new
     content = File.read(file_path)
-
-    begin
-      # OCR the file and check that it completed
-      file_details[:filetype], mime_type = check_mime_type(content, name, file_path)
-      file_details[:text] = ocr_by_type(content, name, file_path, file_details[:filetype], mime_type).to_s
-      file_details[:ocr_status] = ocr_status_check(file_details[:text])
       
-      # Set paths
-      file_details[:rel_path] = file_path.gsub(@in_dir, "")
-      file_details[:full_path] = file_path.gsub(@in_dir, "")
-      file_details[:folders] = file_details[:rel_path].split("/").reject!(&:empty?)-[name]
-      file_details[:title] = file_details[:rel_path].split("/").join(" ").strip.lstrip.gsub("_", " ").gsub(".#{file_details[:filetype]}", "")
+    # Set paths
+    file_details[:rel_path] = file_path.gsub(@in_dir, "")
+    file_details[:full_path] = file_path.gsub(@in_dir, "")
+
+    # Set folders and title
+    file_details[:folders] = file_details[:rel_path].split("/").reject!(&:empty?)-[name]
+    file_details[:title] = file_details[:rel_path].split("/").join(" ").strip.lstrip.gsub("_", " ").gsub(".#{file_details[:filetype]}", "")
+
+    # OCR
+    file_details = file_details.merge(ocr_file(content, name, file_path))
     
-      #    file_details = file_details.merge(extract_metadata(file_details, file_path))
-      puts file_details[:text]
+    begin
       return JSON.pretty_generate(file_details)
     rescue # Fix encoding if JSON generate fails (but not otherwise to avoid causing issues with text)
       puts "Encoding issue, attempting to fix..."
       begin
-        file_details[:text] = file_details[:text].force_encoding('UTF-8')
+        file_details[:text] = file_details[:text].to_s.force_encoding('UTF-8') if file_details[:text]
+        file_details[:body] = file_details[:body].to_s.force_encoding('UTF-8') if file_details[:body]
+        file_details[:attachment_text] = file_details[:attachment_text].to_s.force_encoding('UTF-8') if file_details[:attachment_text]
         return JSON.pretty_generate(file_details)
       rescue
         puts "That failed. Trying to fix in another way."
-        file_details[:text] = fix_encoding(file_details[:text])
+        file_details[:text] = fix_encoding(file_details[:text].to_s) if file_details[:text]
+        file_details[:body] = fix_encoding(file_details[:body].to_s) if file_details[:body]
+        file_details[:attachment_text] = fix_encoding(file_details[:attachment_text].to_s) if file_details[:attachment_text]
         return JSON.pretty_generate(file_details)
       end
     end
