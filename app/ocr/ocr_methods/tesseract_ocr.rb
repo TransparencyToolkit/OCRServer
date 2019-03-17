@@ -5,14 +5,14 @@ module TesseractOCR
   # OCR embedded text PDFs with docsplit
   def ocr_with_docsplit(path, mime_subtype)
     # OCR document
-    `docsplit text #{"'"+path+"'"}  --pages all --output raw_documents/text`
+    `docsplit text #{"'"+path+"'"}  --pages all --output #{ENV['OCR_IN_PATH']}/text`
 
     # Collect text
     text = ""
     base_path = path.split("/").last.gsub("."+mime_subtype, "")
-    text_files = Dir.glob("raw_documents/text/#{base_path}_*.txt")
+    text_files = Dir.glob("#{ENV['OCR_IN_PATH']}/text/#{base_path}_*.txt")
     text_files.length.times do |num|
-      text += File.read("raw_documents/text/#{base_path}_#{num+1}.txt")
+      text += File.read("#{ENV['OCR_IN_PATH']}/text/#{base_path}_#{num+1}.txt")
     end
 
     # Delete the files after reading

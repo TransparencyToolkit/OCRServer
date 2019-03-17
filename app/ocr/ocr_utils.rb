@@ -12,9 +12,9 @@ module OCRUtils
     # Set path to documents with extension
     if split_path.length > 1
       extension = "."+split_path.last
-      return path.gsub("raw_documents", "raw_documents/text").gsub(extension, ".txt")
+      return path.gsub(ENV['OCR_IN_PATH'], "#{ENV['OCR_IN_PATH']}/text").gsub(extension, ".txt")
     else # Set path to documents without extension
-      return path.gsub("raw_documents", "raw_documents/text")+".txt"
+      return path.gsub(ENV['OCR_IN_PATH'], "#{ENV['OCR_IN_PATH']}/text")+".txt"
     end
   end
 end
