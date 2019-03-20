@@ -1,5 +1,6 @@
 require 'pry'
 require 'json'
+require 'listen'
 
 class LoadFiles
   include OCRManager
@@ -11,9 +12,23 @@ class LoadFiles
     @out_dir = out_dir
   end
 
+  # Listen for new files to OCR
+  def listen_for_files
+    # OCR if there are new files
+    listener = Listen.to("#{@in_dir}/raw_docs/") do |_, new, _|
+      load_and_ocr_all(new) if new
+    end
+    listener.start
+
+    # Keep listening
+    loop do
+      sleep(0.5)
+    end
+  end
+
   # Load in all files
-  def load_and_ocr_all
-    Dir.glob("#{@in_dir}/raw_docs/**/*") do |file|
+  def load_and_ocr_all(files_to_ocr)
+    files_to_ocr.each do |file|
       if File.file?(file)
         metadata = load_metadata(file).to_hash
         ocred_file = ocr(file)

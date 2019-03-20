@@ -22,6 +22,7 @@ from the document upload form, OCRs the documents, and saves the results.
 * filemagic
 * pry
 * mail
+* listen
 
 3. Install Apache Tika server by downloading the .jar from
 https://tika.apache.org/download.html
@@ -45,4 +46,5 @@ Documents need to be uploaded for the rest to work.
   * PROJECT_INDEX: Optional. Only needed if not using with the rest of the pipeline.
 
 8. In this directory (for the OCRServer), run: ruby run_ocr.rb
-
+It will then listen for new documents in OCR_IN.
+This must be started BEFORE documents are uploaded.
