@@ -4,7 +4,7 @@ module MetadataExtractGen
   def add_metadata_to_file(metadata, ocr_hash)
     # Add title and description
     ocr_hash[:title] = add_title(metadata, ocr_hash)
-    ocr_hash[:description] = metadata["doc_desc"]
+    ocr_hash[:description] = metadata["doc_desc"] if metadata
 
     # Add field with date added
     ocr_hash[:date_added] = Time.now
@@ -24,11 +24,11 @@ module MetadataExtractGen
   # Generate a title for the document
   def add_title(metadata, ocr_hash)
     # If title isn't empty, use that
-    if metadata["doc_title"] && !metadata["doc_title"].empty?
+    if metadata && metadata["doc_title"] && !metadata["doc_title"].empty?
       return metadata["doc_title"]
       
     else # Trim file name and automatically generate a title
-      trimmed_name = ocr_hash[:rel_path].split("_", 2)[1].split(".#{ocr_hash[:filetype]}")[0]
+      trimmed_name = @file.split("/").last.split(".#{ocr_hash[:filetype]}")[0]
       return trimmed_name.gsub("_", " ").gsub("/", "").gsub("-", " ").split.map(&:capitalize).join(" ")
     end
   end
