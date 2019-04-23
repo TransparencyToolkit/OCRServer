@@ -3,7 +3,7 @@ require "json"
 require "mimemagic"
 require "docsplit"
 require "curb"
-require "filemagic"
+require "ruby-filemagic"
 require "zip"
 require "securerandom"
 

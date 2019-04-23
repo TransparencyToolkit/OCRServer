@@ -19,7 +19,7 @@ from the document upload form, OCRs the documents, and saves the results.
 * mimemagic
 * docsplit
 * curb
-* filemagic
+* ruby filemagic
 * pry
 * mail
 * listen
