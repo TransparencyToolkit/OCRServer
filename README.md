@@ -4,6 +4,7 @@ from the document upload form, OCRs the documents, and saves the results.
 1. Install the following packages:
 * graphicsmagick
 * poppler-data
+* poppler-utils
 * ghostscript
 * tesseract-ocr
 * pdftk
