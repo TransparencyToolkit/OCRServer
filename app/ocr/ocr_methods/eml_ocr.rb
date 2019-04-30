@@ -63,7 +63,7 @@ module EmlOCR
   end
 
   # OCR individual attachments
-  def ocr_attachment(attachment, attachment_text, attachment_list, file_types)
+  def ocr_attachment(attachment, attachment_text, attachment_list, file_types, full_path)
     attach_path = ENV['OCR_OUT_PATH']+"/raw_docs/"+gen_attachment_filename(full_path, attachment.filename)
 
     # Save and OCR
