@@ -30,7 +30,7 @@ class LoadFiles
 
   # Check if file is a compressed file
   def is_compressed?(mime_subtype)
-    compressed_mime_types = ["zip"]
+    compressed_mime_types = ["zip", "mbox"]
 
     # Check if mime type matches any on the compressed list
     return compressed_mime_types.select{|c| mime_subtype.downcase == c}.length > 0

@@ -1,8 +1,10 @@
 load 'app/decompress/extract_methods/zip_extract.rb'
+load 'app/decompress/extract_methods/mbox_extract.rb'
 
 # Decompress the file (unzip, untar, etc)
 module DecompressFile
   include ZipExtract
+  include MboxExtract
 
   # Decompress the file
   def decompress_by_type(mime_subtype, full_path)
@@ -13,6 +15,8 @@ module DecompressFile
     case mime_subtype
     when "zip"
       unzip(full_path, save_dir)
+    when "mbox"
+      split_mbox_to_eml(full_path, save_dir)
     end
 
     # Return location of files so OCR software can find them

@@ -7,7 +7,6 @@ require "ruby-filemagic"
 require "zip"
 require "securerandom"
 
-
 Dir.glob('./app/{ocr,decompress,input_output}/*.rb').each { |file| require file }
 
 ENV['OCR_IN_PATH'] = "/home/user/ocr_in" if ENV['OCR_IN_PATH'] == nil
