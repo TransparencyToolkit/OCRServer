@@ -50,7 +50,7 @@ class ProcessSingleFiles
   # Determine the document type class that should be used when indexing the document
   def determine_doc_type(filetype)
     case filetype
-    when "eml", "pst", "mbox"
+    when "eml", "pst", "mbox", "email", "message"
       return "Email"
     else # This is the best option for most file formats
       return "ArchiveDoc"
