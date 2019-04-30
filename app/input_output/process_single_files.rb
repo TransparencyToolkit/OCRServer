@@ -49,9 +49,10 @@ class ProcessSingleFiles
 
   # Determine the document type class that should be used when indexing the document
   def determine_doc_type(filetype)
+    filetype = filetype.first if filetype.is_a?(Array)
     case filetype
     when "eml", "pst", "mbox", "email", "message"
-      return "Email"
+      return "EmailDoc"
     else # This is the best option for most file formats
       return "ArchiveDoc"
     end
@@ -88,7 +89,7 @@ class ProcessSingleFiles
     
     # Adds title, description, date_added to OCRed hash
     add_metadata_to_file(@metadata, ocred_file)
-    
+  
     # Add fields for index manager
     ocred_file[:index_fields] = {
       index_name: get_project_index,
