@@ -17,10 +17,10 @@ module DetectFiletype
       subtype, type = officex_remap(file, path, full_path) if subtype == "zip" || subtype.include?("x-ole-storage")
 
       # Remap mime subtypes for office files with long names
-      subtype, type = vnd_remap(subtype, type) if subtype.include?("vnd")
+      subtype, type = vnd_remap(subtype, type) if (subtype && subtype.include?("vnd"))
 
       # Remap email types
-      subtype, type = "email", "message" if subtype.include?("rfc822")
+      subtype, type = "email", "message" if (subtype && subtype.include?("rfc822"))
     end
     
     return subtype, type

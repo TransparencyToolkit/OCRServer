@@ -35,7 +35,14 @@ class LoadFiles
     # Check if mime type matches any on the compressed list
     return compressed_mime_types.select{|c| mime_subtype.downcase == c}.length > 0
   end
-  
+
+  # These files should be skipped entirely (and not included even without OCR)
+  def skip_file?(mime_subtype)
+    skip_mime_types = ["lnk"]
+
+    # Check if mime type matches any on the skip list
+    return skip_mime_types.select{|c| mime_subtype.downcase == c}.length > 0
+  end
 
   # Process the compressed file
   def process_compressed(file_path, mime_subtype)
@@ -62,7 +69,7 @@ class LoadFiles
         # Check if it is a compressed file
         if is_compressed?(subtype)
           process_compressed(file, subtype)
-        else # Is normal file- OCR directly
+        elsif !skip_file?(subtype) # Is normal file- OCR directly
           metadata = load_metadata(file)
           p = ProcessSingleFiles.new(file, file_content, metadata, @in_dir, @out_dir)
           p.process_file
