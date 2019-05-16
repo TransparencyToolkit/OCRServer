@@ -64,10 +64,19 @@ module DetectFiletype
         return process_unknown_binary_file(path)
       elsif fm.file(full_path).include?("text")
         return process_unknown_text_file(file, path)
+      elsif fm.file(full_path).include?("wine-extension-ini")
+        return process_unknown_windows_file(path)
       end
     end
   end
 
+  # Detect types like ini
+  def process_unknown_windows_file(path)
+    if path.include?(".ini")
+      return "ini", "ini"
+    end
+  end
+  
   # Process text files of unknown type (html or text)
   def process_unknown_text_file(file, path)
     if path.include?(".eml")

@@ -38,7 +38,7 @@ class LoadFiles
 
   # These files should be skipped entirely (and not included even without OCR)
   def skip_file?(mime_subtype)
-    skip_mime_types = ["lnk"]
+    skip_mime_types = ["lnk", "ini"]
 
     # Check if mime type matches any on the skip list
     return skip_mime_types.select{|c| mime_subtype.downcase == c}.length > 0
