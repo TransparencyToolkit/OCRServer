@@ -1,6 +1,7 @@
 require 'pry'
 require 'json'
 require 'listen'
+require 'set'
 load 'app/input_output/process_single_files.rb'
 load 'app/decompress/decompress_file.rb'
 
@@ -16,15 +17,32 @@ class LoadFiles
 
   # Listen for new files to OCR
   def listen_for_files
-    # OCR if there are new files
-    listener = Listen.to("#{@in_dir}/raw_docs/") do |_, new, _|
-      load_and_ocr_all(new) if new
+    raw_docs_path = "#{@in_dir}/raw_docs/"
+
+    # inotify doesn't currently register events on 9p filesystems
+    # check the device type and compare against 9p' major device number 0
+    inotify_works = 0 != File.stat(raw_docs_path).dev_major
+
+    if inotify_works
+      # OCR if there are new files
+      listener = Listen.to(raw_docs_path) do |_, new, _|
+        load_and_ocr_all(new) if new
+      end
+      listener.start
     end
-    listener.start
 
     # Keep listening
+    processed = Set.new()
     loop do
-      sleep(0.5)
+      if not inotify_works
+        # fallback to repeatedly globbing for the 9p case:
+        all_files = Set.new(Dir.glob("#{raw_docs_path}/*"))
+        new_files = all_files - processed
+        # OCR if there are new files
+        load_and_ocr_all(new_files)
+        processed.add(new_files)
+      end
+      sleep(2)
     end
   end
 
