@@ -20,9 +20,15 @@ module DecompressFile
     end
 
     # Return location of files so OCR software can find them
+    move_raw_uploaded(full_path)
     return save_dir
   end
 
+  # Move compressed file initially uploaded so it doesn't keep running
+  def move_raw_uploaded(full_path)
+    FileUtils.mv(full_path, full_path.gsub(ENV['OCR_IN_PATH'], ENV['OCR_OUT_PATH']))
+  end
+  
   # Set and create the path to decompress to
   def set_decompression_path(full_path)
     file_name = full_path.gsub("#{ENV['OCR_IN_PATH']}/raw_docs/", "").gsub("#{ENV['OCR_IN_PATH']}/compressed/", "")
