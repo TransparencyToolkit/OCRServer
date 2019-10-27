@@ -26,24 +26,18 @@ class ProcessSingleFiles
   def save_file(json_out)
     ocred_metadata = JSON.parse(json_out)
     
-    # Move raw file to out path
+    # Move raw file to out path and create dirs
+    system("mkdir -p #{ocred_metadata["full_path"].split("/")[0..-2].join("/")}")
     FileUtils.mv(@file, ocred_metadata['full_path'])
 
     # Save metadata file
-    File.write("#{@out_dir}/ocred_docs/#{ocred_metadata['rel_path']}.json", json_out)
+    File.write("#{@out_dir}/ocred_docs/#{ocred_metadata['file_hash']}.json", json_out)
   end
 
   # Set the save name for the file (accounts for > 250 chars or directories in name)
   def set_save_name
     # Include directories in saved name
-    save_name = @file.gsub("#{@in_dir}/raw_docs/", "").gsub("#{@in_dir}/compressed/", "").gsub("/", "_")
-    
-    # Handle names that are above file system limit
-    if save_name.length > 250
-      extension = save_name.split(".").last
-      save_name = save_name.gsub(".#{extension}", "")[0..230]+".#{extension}"
-    end
-
+    save_name = @file.gsub("#{@in_dir}/raw_docs/", "").gsub("#{@in_dir}/compressed/", "")
     return save_name
   end
 

@@ -6,6 +6,7 @@ require "curb"
 require "ruby-filemagic"
 require "zip"
 require "securerandom"
+require "digest/md5"
 
 Dir.glob('./app/{ocr,decompress,input_output}/*.rb').each { |file| require file }
 

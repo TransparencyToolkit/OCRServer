@@ -50,3 +50,6 @@ Documents need to be uploaded for the rest to work.
 8. In this directory (for the OCRServer), run: ruby run_ocr.rb
 It will then listen for new documents in OCR_IN.
 This must be started BEFORE documents are uploaded.
+
+
+Note: To run on an existing directory, set inotify_works = false in input_output/load_files.rb
