@@ -4,6 +4,7 @@ module MetadataExtractGen
   def add_metadata_to_file(metadata, ocr_hash)
     # Add title and description
     ocr_hash[:file_hash] = get_hash
+    ocr_hash[:lg_pdf_view] = @lg_pdf_view
     ocr_hash[:title] = add_title(metadata, ocr_hash)
     ocr_hash[:description] = metadata["doc_desc"] if metadata
     

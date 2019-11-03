@@ -6,6 +6,7 @@ load 'app/ocr/ocr_methods/abbyy_ocr.rb'
 load 'app/ocr/ocr_methods/eml_ocr.rb'
 load 'app/ocr/ocr_methods_by_filetype.rb'
 load 'app/ocr/detect_filetype.rb'
+load 'app/ocr/ocr_methods/unoconv_pdf.rb'
 
 # Manages the OCR process by routing to appropriate method for doc type, checking if it worked, etc.
 module OCRManager
@@ -17,6 +18,7 @@ module OCRManager
   include EmlOCR
   include OCRMethodsByFiletype
   include DetectFiletype
+  include UnoconvPdf
 
   # OCR the file
   def ocr_file(file, file_name, full_path)
@@ -71,7 +73,7 @@ module OCRManager
       return ocr_pdf(full_path, mime_type, mime_subtype)
 
     # Office docs and HTML
-    when "rtf", "msword", "docx", "odt", "ppt", "pptx", "odp", "xls", "xlsx", "ods", "html", "xml", "key"
+    when "rtf", "msword", "docx", "odt", "wbk", "ppt", "pptx", "odp", "xls", "xlsx", "ods", "html", "htm", "xml", "key"
       return ocr_office_doc(full_path, mime_type, mime_subtype)
       
     # Text formats

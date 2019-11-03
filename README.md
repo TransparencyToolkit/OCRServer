@@ -15,6 +15,7 @@ from the document upload form, OCRs the documents, and saves the results.
 * libcurl3-gnutls
 * libcurl4-openssl-dev
 * libmagic-dev
+* unoconv
 
 2. Install the following gems:
 * mimemagic

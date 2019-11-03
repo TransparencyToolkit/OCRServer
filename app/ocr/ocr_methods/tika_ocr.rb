@@ -9,7 +9,6 @@ module TikaOCR
     # Make a Curl request to Tika
     c = Curl::Easy.new("http://localhost:9998/tika")
     file_data = File.read(path)
-    c.headers['Content-Type'] = mime_type
     c.headers['Accept'] = "text/plain"
     c.http_put(file_data)
     text = c.body_str

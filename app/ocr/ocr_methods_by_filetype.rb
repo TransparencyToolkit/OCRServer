@@ -15,6 +15,11 @@ module OCRMethodsByFiletype
 
   # OCR office file formats
   def ocr_office_doc(full_path, mime_type, mime_subtype)
+    # Make a PDF of most office formats
+    no_pdf = ["html", "htm", "xml", "key"]
+    generate_pdf_of_doc(full_path, mime_subtype) if !no_pdf.include?(mime_subtype.downcase)
+    
+    # Try OCRing with Tika
     text = ocr_with_tika(full_path, mime_type, mime_subtype)
 
     # Tika OCR failed. Try with ABBYY
