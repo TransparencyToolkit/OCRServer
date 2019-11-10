@@ -23,7 +23,7 @@ module OCRMethodsByFiletype
     text = ocr_with_tika(full_path, mime_type, mime_subtype)
 
     # Tika OCR failed. Try with ABBYY
-    if ocr_status_check(text) != "Success"
+    if ocr_status_check(text) != "Success" && (mime_subtype.downcase == "pdf")
       begin
         text = ocr_with_abbyy(full_path)
       rescue

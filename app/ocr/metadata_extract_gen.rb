@@ -3,7 +3,7 @@ module MetadataExtractGen
   # Add metadata to thee file
   def add_metadata_to_file(metadata, ocr_hash)
     # Add title and description
-    ocr_hash[:file_hash] = get_hash
+    ocr_hash[:file_hash] = get_hash(@file)
     ocr_hash[:lg_pdf_view] = @lg_pdf_view
     ocr_hash[:title] = add_title(metadata, ocr_hash)
     ocr_hash[:description] = metadata["doc_desc"] if metadata
@@ -13,8 +13,8 @@ module MetadataExtractGen
   end
 
   # Get the hash for the file
-  def get_hash
-    file_read = File.read(@file)
+  def get_hash(path)
+    file_read = File.read(path)
     return Digest::MD5.hexdigest(file_read)
   end
 

@@ -26,7 +26,7 @@ module DecompressFile
 
   # Move compressed file initially uploaded so it doesn't keep running
   def move_raw_uploaded(full_path)
-    FileUtils.mv(full_path, full_path.gsub(ENV['OCR_IN_PATH'], ENV['OCR_OUT_PATH']))
+    FileUtils.mv(full_path, full_path.gsub(ENV['OCR_IN_PATH']+"/raw_docs", ENV['OCR_OUT_PATH']+"/compressed"))
   end
   
   # Set and create the path to decompress to
